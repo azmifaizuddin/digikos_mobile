@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:digikos_mobile/models/kosan_model.dart';
 import 'package:digikos_mobile/models/user_model.dart';
+import 'package:digikos_mobile/screens/kosan/kosan_screen.dart';
 import 'package:digikos_mobile/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,56 +28,103 @@ class _HomeScreenState extends State<HomeScreen> {
         .get()
         .then((value) {
       loggedInUser = UserModel.fromMap(value.data());
+      print(loggedInUser.firstName);
       setState(() {});
     });
   }
+
+  Stream<List<KosanModel>> readKosan() => FirebaseFirestore.instance
+      .collection("datakosan")
+      .snapshots()
+      .map((snapshots) =>
+          snapshots.docs.map((doc) => KosanModel.fromMap(doc.data())).toList());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Welcome"),
+        title: Text(
+          "Digikos",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                logout(context);
+              },
+              icon: Icon(
+                Icons.logout_rounded,
+                color: Colors.white,
+              ))
+        ],
       ), //appbar
-      body: Center(
-          child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 150,
-                      child: Image.asset("assets/digikos_logo.png",
-                          fit: BoxFit.contain),
+      body: StreamBuilder<List<KosanModel>>(
+          stream: readKosan(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final kost = snapshot.data;
+              return Padding(
+                padding: const EdgeInsets.all(20),
+                child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 20,
                     ),
-                    const Text(
-                      "Welcome Back",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text("${loggedInUser.firstName} ${loggedInUser.secondName}",
-                        style: const TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w500,
-                        )),
-                    Text("${loggedInUser.email}",
-                        style: const TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w500,
-                        )),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    ActionChip(
-                        label: const Text("Logout"),
-                        onPressed: (() {
-                          logout(context);
-                        }))
-                  ]))),
+                    itemCount: kost!.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => KostDetail(
+                                kost: kost[index],
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.orange.withOpacity(0.7),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 24,
+                              ),
+                              Image.network(
+                                kost[index].gambar_kosan!,
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.cover,
+                              ),
+                              SizedBox(
+                                height: 12,
+                              ),
+                              Text(
+                                kost[index].nama_kosan!,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text(snapshot.error.toString()),
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
     );
   }
 

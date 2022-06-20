@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: <Widget>[
                     SizedBox(
                       height: 200,
-                      child: Image.asset("assets/digikos_logo.png",
+                      child: Image.asset("assets/images/digikos_logo.png",
                           fit: BoxFit.contain),
                     ),
                     const SizedBox(height: 45),

@@ -217,7 +217,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   children: <Widget>[
                     SizedBox(
                       height: 100,
-                      child: Image.asset("lib/icons/digikos_logo.png",
+                      child: Image.asset("assets/images/digikos_logo.png",
                           fit: BoxFit.contain),
                     ),
                     const SizedBox(height: 45),
