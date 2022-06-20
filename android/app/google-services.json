@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "423451297059",
+    "project_id": "digikosmobile",
+    "storage_bucket": "digikosmobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:423451297059:android:3f6058c152825d0affb896",
+        "android_client_info": {
+          "package_name": "com.example.digikos_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "423451297059-5oo140boe465o6cslpghdhlor8jmv96i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ02n_400vm_aj_dSpEBDgK8WKXsHaGdM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "423451297059-5oo140boe465o6cslpghdhlor8jmv96i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
